@@ -1,0 +1,198 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".HomeActivity$PlaceholderFragment"
+
+    xmlns:fbutton="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/section_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Kupujem"
+        android:id="@+id/logoText1"
+        android:layout_below="@+id/section_label"
+        android:layout_centerHorizontal="true"
+        android:textSize="50sp"
+        android:textColor="#ffe51c23"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Prodajem"
+        android:id="@+id/logoText2"
+        android:textSize="50sp"
+        android:layout_below="@+id/logoText1"
+        android:layout_centerHorizontal="true"
+        android:textColor="#ffc107"
+        android:layout_marginTop="-15dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pretragaEditText"
+        android:layout_below="@+id/logoText2"
+        android:layout_marginTop="44dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/section_label"
+        android:layout_alignStart="@+id/section_label"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:hint="Ključne reči..."
+
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:textSize="22sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tip oglasa:"
+        android:id="@+id/tipOglasaLabel"
+        android:layout_below="@+id/pretragaEditText"
+        android:layout_alignLeft="@+id/pretragaEditText"
+        android:layout_alignStart="@+id/pretragaEditText"
+        android:layout_marginTop="10dp"
+        android:textSize="22sp"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tipOglasaSpinner"
+        android:layout_alignTop="@+id/tipOglasaLabel"
+        android:layout_toRightOf="@+id/tipOglasaLabel"
+        android:layout_toEndOf="@+id/tipOglasaLabel"
+        android:layout_alignBottom="@+id/tipOglasaLabel"
+        android:layout_alignRight="@+id/pretragaEditText"
+        android:layout_alignEnd="@+id/pretragaEditText"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="-6dp"
+        android:layout_marginTop="-3dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kategorija:"
+        android:id="@+id/kategorijaLabel"
+        android:layout_below="@+id/pretragaEditText"
+        android:layout_alignLeft="@+id/pretragaEditText"
+        android:layout_alignStart="@+id/pretragaEditText"
+        android:layout_marginTop="45dp"
+        android:textSize="22sp"/>
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/kategorijaSpinner"
+        android:layout_alignTop="@+id/kategorijaLabel"
+        android:layout_toRightOf="@+id/kategorijaLabel"
+        android:layout_toEndOf="@+id/kategorijaLabel"
+        android:layout_alignBottom="@+id/kategorijaLabel"
+        android:layout_alignRight="@+id/pretragaEditText"
+        android:layout_alignEnd="@+id/pretragaEditText"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="-6dp"
+        android:layout_marginTop="-3dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mesto:"
+        android:id="@+id/mestoLabel"
+        android:layout_below="@+id/pretragaEditText"
+        android:layout_alignLeft="@+id/pretragaEditText"
+        android:layout_alignStart="@+id/pretragaEditText"
+        android:layout_marginTop="80dp"
+        android:textSize="22sp"/>
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mestoSpinner"
+        android:layout_alignTop="@+id/mestoLabel"
+        android:layout_toRightOf="@+id/mestoLabel"
+        android:layout_toEndOf="@+id/mestoLabel"
+        android:layout_alignBottom="@+id/mestoLabel"
+        android:layout_alignRight="@+id/pretragaEditText"
+        android:layout_alignEnd="@+id/pretragaEditText"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="-6dp"
+        android:layout_marginTop="-3dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stanje:"
+        android:id="@+id/stanjeLabel"
+        android:layout_below="@+id/pretragaEditText"
+        android:layout_alignLeft="@+id/pretragaEditText"
+        android:layout_alignStart="@+id/pretragaEditText"
+        android:layout_marginTop="115dp"
+        android:textSize="22sp"/>
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/stanjeSpinner"
+        android:layout_alignTop="@+id/stanjeLabel"
+        android:layout_toRightOf="@+id/stanjeLabel"
+        android:layout_toEndOf="@+id/stanjeLabel"
+        android:layout_alignBottom="@+id/stanjeLabel"
+        android:layout_alignRight="@+id/pretragaEditText"
+        android:layout_alignEnd="@+id/pretragaEditText"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="-6dp"
+        android:layout_marginTop="-3dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Prikaži prvo:"
+        android:id="@+id/prikaziPrvoLabel"
+        android:layout_below="@+id/pretragaEditText"
+        android:layout_alignLeft="@+id/pretragaEditText"
+        android:layout_alignStart="@+id/pretragaEditText"
+        android:layout_marginTop="150dp"
+        android:textSize="22sp"/>
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/prikaziPrvoSpinner"
+        android:layout_alignTop="@+id/prikaziPrvoLabel"
+        android:layout_toRightOf="@+id/prikaziPrvoLabel"
+        android:layout_toEndOf="@+id/prikaziPrvoLabel"
+        android:layout_alignBottom="@+id/prikaziPrvoLabel"
+        android:layout_alignRight="@+id/pretragaEditText"
+        android:layout_alignEnd="@+id/pretragaEditText"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="-6dp"
+        android:layout_marginTop="-3dp"/>
+
+    <view
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        class="info.hoang8f.widget.FButton"
+        android:id="@+id/searchButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="3dp"
+        fbutton:cornerRadius="3dp"
+
+        fbutton:buttonColor="#e51c23"
+        android:textColor="#ffffff"
+        android:text="Pretraži"/>
+
+
+</RelativeLayout>

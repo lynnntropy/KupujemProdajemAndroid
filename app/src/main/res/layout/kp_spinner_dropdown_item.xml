@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical" >
+
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:id="@+id/textView1"
+                 style="@style/spinnerDropDownItemStyle"
+                 android:singleLine="true"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:ellipsize="marquee"
+                 android:gravity="right"
+                 android:text="text_goes_here"
+                 android:layout_centerVertical="true"
+                 android:layout_alignParentLeft="true"
+                 android:layout_alignParentStart="true"
+                 android:paddingTop="5dp"
+                 android:paddingBottom="5dp"
+                 android:paddingRight="10dp"
+                 android:textSize="17sp"/>
+
+</RelativeLayout>

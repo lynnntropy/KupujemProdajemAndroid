@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+
+                xmlns:fbutton="http://schemas.android.com/apk/res-auto"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:paddingBottom="25dp">
+
+    <view
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        class="info.hoang8f.widget.FButton"
+        android:id="@+id/downloadButton"
+        android:text="Preuzmi"
+        android:width="150dp"
+
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="3dp"
+        fbutton:cornerRadius="3dp"
+
+        fbutton:buttonColor="#e51c23"
+        android:textColor="#ffffff"
+
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pri prvom pokretanju aplikacije, morate preuzeti određene podatke (kategorije, mesta, itd.) sa KP sajta."
+        android:id="@+id/textView1"
+        android:gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pritisnite dugme da biste započeli preuzimanje."
+        android:id="@+id/textView2"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/downloadButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:textSize="15sp"/>
+
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/downloadBar"
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+
+        android:indeterminate="true"
+
+        app:spb_sections_count="4"
+        app:spb_color="#FF0000"
+        app:spb_speed="2.0"
+        app:spb_stroke_width="4dp"
+        app:spb_stroke_separator_length="4dp"
+        app:spb_reversed="false"
+        app:spb_mirror_mode="false"
+        app:spb_progressiveStart_activated="true"
+        app:spb_progressiveStart_speed="1.5"
+        app:spb_progressiveStop_speed="3.4"/>
+
+</RelativeLayout>

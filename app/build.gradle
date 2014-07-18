@@ -1,0 +1,39 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 20
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        applicationId "com.omegavesko.kupujemprodajem"
+        minSdkVersion 15
+        targetSdkVersion 20
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    // You must install or update the Support Repository through the SDK manager to use this dependency.
+    // You must install or update the Support Repository through the SDK manager to use this dependency.
+    // You must install or update the Google Repository through the SDK manager to use this dependency.
+    
+
+
+    compile files(
+    'libs/jsoup-1.7.3.jar')
+    // You must install or update the Support Repository through the SDK manager to use this dependency.
+    compile 'com.android.support:support-v4:19.+'
+    compile 'com.google.android.gms:play-services:4.2.42'
+    compile 'info.hoang8f:fbutton:1.0.5'
+    compile 'com.github.castorflex.smoothprogressbar:library:0.5.2'
+    compile 'com.github.gabrielemariotti.cards:library:1.8.0'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.2'
+}
