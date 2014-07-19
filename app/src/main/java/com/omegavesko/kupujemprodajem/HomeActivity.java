@@ -25,14 +25,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.jsoup.nodes.Document;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -448,7 +446,7 @@ public class HomeActivity extends Activity
             TextView textView1 = (TextView) downloadDialog.findViewById(R.id.textView1);
             textView1.setTypeface(robotoLight);
 
-            TextView textView2 = (TextView) downloadDialog.findViewById(R.id.textView2);
+            TextView textView2 = (TextView) downloadDialog.findViewById(R.id.sellerLocation);
             textView2.setTypeface(robotoLight);
 
             downloadBar = (SmoothProgressBar) downloadDialog.findViewById(R.id.downloadBar);

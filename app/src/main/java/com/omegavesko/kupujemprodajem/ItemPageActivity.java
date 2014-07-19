@@ -1,36 +1,35 @@
 package com.omegavesko.kupujemprodajem;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.omegavesko.kupujemprodajem.R;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.InjectView;
 import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
+import it.gmariotti.cardslib.library.view.CardView;
 
 public class ItemPageActivity extends Activity {
+
+//    @InjectView(R.id.sellerInformationCard)
+    CardView mSellerInformationCard;
+//    @InjectView(R.id.itemDescriptionCard)
+    CardView mItemDescriptionCard;
 
     class PageDownloaderTask extends AsyncTask<String, Void, ItemPageData>
     {
@@ -38,7 +37,7 @@ public class ItemPageActivity extends Activity {
         private List<WebsiteHandler.Category> categories;
         private List<WebsiteHandler.Location> locations;
 
-        private org.jsoup.nodes.Document downloadedPage;
+        private Document downloadedPage;
 
         protected ItemPageData doInBackground(String... params)
         {
@@ -67,26 +66,14 @@ public class ItemPageActivity extends Activity {
 
                 result.title = itemPage.select("div.oglasHolder").select("h1").first().text();
 
-                // loop through <p> elements to preserve newlines
-                result.description = "";
-
-                if (itemPage.select("div.roundBorder").first().select("p").size() > 0)
-                {
-                    for (Element e : itemPage.select("div.roundBorder").first().select("p"))
-                    {
-                        result.description += e.html().replace("<br/>", "\n").replace("<br />", "\n").replaceAll("<.*?>", "").replace("&nbsp;", "") + "\n\n";
-                    }
-                }
-                else
-                {
-                    result.description += itemPage.select("div.roundBorder").first().html().replace("<br/>", "\n").replace("<br />", "\n").replaceAll("<.*?>", "").replace("&nbsp;", "");
-                }
+                // now passing HTML to a WebViewCard instead of trying to parse it ourselves
+                result.descriptionHTML = itemPage.select("div.roundBorder").first().html();
 
                 result.price = itemPage.select("div.price").first().text();
                 result.viewCount = itemPage.select("td.lineSeparator").first().select("div").get(1).text();
 
                 result.memberLocation = itemPage.select("td.lineSepar1ator").select("tr").get(4).text();
-                result.memberName = itemPage.select("td.lineSepar1ator").select("tr").get(1).text().replace(" offline", "");
+                result.memberName = itemPage.select("td.lineSepar1ator").select("tr").get(1).text().replace(" offline", "").replace(" online", "");
                 result.memberYesVotes = itemPage.select("td.lineSepar1ator").select("tr").get(2).select("span.positiveColor").text();
                 result.memberNoVotes = itemPage.select("td.lineSepar1ator").select("tr").get(2).select("span.negativeColor").text();
 
@@ -116,21 +103,17 @@ public class ItemPageActivity extends Activity {
                 {
 //                    // TODO
 
+                    Card descriptionCard = new WebViewCard(getApplicationContext(), result.descriptionHTML);
+                    Card sellerInfoCard = new SellerInformationCard(getApplicationContext(), result);
+
+                    mSellerInformationCard.setCard(sellerInfoCard);
+                    mItemDescriptionCard.setCard(descriptionCard);
+
                     downloadIndicator.animate().alpha(0f).setDuration(300);
 
                     itemPrice.setText(result.price);
 
-                    sellerNameAndVotes.setText(result.memberName + " (+" + result.memberYesVotes + ", -" + result.memberNoVotes + ")");
-                    sellerLocation.setText(result.memberLocation);
-                    sellerPhoneNumber.setImageBitmap(result.memberPhoneNumber);
-
-                    itemDesc.setText(result.description);
-                    itemDesc.animate().alpha(1f).setDuration(500).setListener(null);
-
                     itemPrice.animate().alpha(1f).setDuration(500).setListener(null);
-                    sellerNameAndVotes.animate().alpha(1f).setDuration(500).setListener(null);
-                    sellerPhoneNumber.animate().alpha(1f).setDuration(500).setListener(null);
-                    sellerLocation.animate().alpha(1f).setDuration(500).setListener(null);
                 }
             });
 
@@ -143,14 +126,11 @@ public class ItemPageActivity extends Activity {
 
 
     private TextView itemName;
-    private TextView itemDesc;
     private ProgressBar downloadIndicator;
 
-    private TextView sellerNameAndVotes;
-    private TextView sellerLocation;
-    private ImageView sellerPhoneNumber;
-
     private TextView itemPrice;
+
+    private CardView itemGalleryCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,22 +149,23 @@ public class ItemPageActivity extends Activity {
         result = (SearchResult) getIntent().getSerializableExtra(ItemSearchFragment.SEARCH_RESULT_EXTRA_KEY);
 
         itemName = (TextView) findViewById(R.id.itemName);
-        itemDesc = (TextView) findViewById(R.id.itemDesc);
+//        itemDesc = (TextView) findViewById(R.id.itemDesc);
         downloadIndicator = (ProgressBar) findViewById(R.id.downloadIndicator);
 
-        sellerNameAndVotes = (TextView) findViewById(R.id.sellerNameAndVotes);
-        sellerLocation = (TextView) findViewById(R.id.sellerLocation);
-        sellerPhoneNumber = (ImageView) findViewById(R.id.sellerPhoneNumberImage);
-
         itemPrice = (TextView) findViewById(R.id.itemPrice);
+        itemPrice.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf"));
+
+        mSellerInformationCard = (CardView) findViewById(R.id.sellerInformationCard);
+        mItemDescriptionCard = (CardView) findViewById(R.id.itemDescriptionCard);
 
         itemName.setText(result.itemName);
-        itemDesc.setAlpha(0f);
-
+        itemName.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf"));
         itemPrice.setAlpha(0f);
-        sellerNameAndVotes.setAlpha(0f);
-        sellerPhoneNumber.setAlpha(0f);
-        sellerLocation.setAlpha(0f);
+
+        itemGalleryCard = (CardView) findViewById(R.id.imageGalleryCard);
+
+        ImageGalleryCard galleryCard = new ImageGalleryCard(this, new ArrayList<Bitmap>());
+        itemGalleryCard.setCard(galleryCard);
 
         new PageDownloaderTask().execute(result.itemURL);
     }

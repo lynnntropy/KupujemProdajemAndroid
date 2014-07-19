@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Pritisnite dugme da biste započeli preuzimanje."
-        android:id="@+id/textView2"
+        android:id="@+id/sellerLocation"
         android:gravity="center_horizontal"
         android:layout_below="@+id/downloadButton"
         android:layout_centerHorizontal="true"

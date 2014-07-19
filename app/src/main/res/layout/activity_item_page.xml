@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/scroller"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:fillViewport="true" >
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/scrollView"
+    android:layout_centerVertical="true"
+    android:layout_centerHorizontal="true"
+    android:background="#eeeeee">
+
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp">
+
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp"
+    android:paddingBottom="100dp"
+    android:background="#eeeeee">
+
+
+        <it.gmariotti.cardslib.library.view.CardView
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            android:id="@+id/imageGalleryCard"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/sellerInformationCard"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="3dp"
+            />
 
 
         <TextView
@@ -21,19 +42,6 @@
             android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Item description goes here"
-            android:id="@+id/itemDesc"
-            android:textSize="11sp"
-            android:layout_toStartOf="@+id/downloadIndicator"
-            android:layout_below="@+id/textView"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
-
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
@@ -45,85 +53,56 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Opis predmeta"
-            android:id="@+id/textView"
-            android:textSize="20sp"
-            android:paddingTop="10dp"
-            android:paddingBottom="5dp"
-            android:layout_toStartOf="@+id/downloadIndicator"
-            android:layout_below="@+id/sellerPhoneNumberImage"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Podaci prodavca"
-            android:id="@+id/textView2"
-            android:textSize="22sp"
-            android:paddingTop="10dp"
-            android:paddingBottom="5dp"
-            android:layout_toStartOf="@+id/downloadIndicator"
-            android:gravity="center_horizontal"
-            android:layout_below="@+id/itemPrice"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pera Perić (+50, -10)"
-            android:id="@+id/sellerNameAndVotes"
-            android:layout_below="@+id/textView2"
-            android:textSize="17sp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:gravity="center_horizontal"/>
-
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:id="@+id/sellerPhoneNumberImage"
-            android:src="#ff2aa4ff"
-            android:layout_below="@+id/sellerLocation"
-            android:layout_alignLeft="@+id/textView"
-            android:layout_alignStart="@+id/textView"
-            android:layout_margin="2dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Novi Sad"
-            android:id="@+id/sellerLocation"
-            android:layout_below="@+id/sellerNameAndVotes"
-            android:textSize="17sp"
-            android:padding="2dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:gravity="center_horizontal"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="Cena: 100,00 €"
             android:id="@+id/itemPrice"
+            android:gravity="center_horizontal"
+            android:textSize="20sp"
+            android:textColor="#ffd70f00"
+            android:paddingTop="5dp"
             android:layout_below="@+id/itemName"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+
+        <it.gmariotti.cardslib.library.view.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/itemDescriptionCard"
+            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:gravity="center_horizontal"
-            android:textSize="20sp"
-            android:textColor="#ffd70f00"
-            android:paddingTop="5dp"/>
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/imageGalleryCard"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="3dp"
+            />
+
+        <it.gmariotti.cardslib.library.view.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:id="@+id/sellerInformationCard"
+            android:layout_below="@+id/itemPrice"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="0dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+
+            />
+
+        <it.gmariotti.cardslib.library.view.component.CardShadowView
+            style="@style/card.shadow_outer_layout"
+            android:id="@+id/card_shadow_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+
+            android:layout_below="@id/imageGalleryCard"
+            android:layout_marginTop="-3dp"/>
 
     </RelativeLayout>
+
 </ScrollView>

@@ -14,7 +14,7 @@ public class ItemPageData
     public String price;
     public String viewCount;
 
-    public String description;
+    public String descriptionHTML;
 
     public List<Bitmap> photos;
 
