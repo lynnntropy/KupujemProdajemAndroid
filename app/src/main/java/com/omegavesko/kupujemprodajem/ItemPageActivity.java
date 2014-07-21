@@ -1,6 +1,7 @@
 package com.omegavesko.kupujemprodajem;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -8,7 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.ProgressBar;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -19,10 +22,14 @@ import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.InjectView;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.view.CardView;
+import it.gmariotti.cardslib.library.view.component.CardShadowView;
 
 public class ItemPageActivity extends Activity {
 
@@ -49,10 +56,7 @@ public class ItemPageActivity extends Activity {
                 @Override
                 public void run()
                 {
-//                    downloadButton.setClickable(false);
-//
-//                    downloadButton.animate().alpha(0.2f).setDuration(300).setListener(null);
-//                    downloadBar.animate().alpha(1f).setDuration(300).setListener(null);
+
                 }
             });
 
@@ -62,6 +66,7 @@ public class ItemPageActivity extends Activity {
             {
                 Log.i("", "Downloading page...");
                 Document itemPage = Jsoup.connect(params[0]).get();
+                String pageSource = itemPage.toString();
                 Log.i("", "Download complete. Starting parse.");
 
                 result.title = itemPage.select("div.oglasHolder").select("h1").first().text();
@@ -82,8 +87,68 @@ public class ItemPageActivity extends Activity {
 
                 // TODO: Load full-size photos from the page and put them into the List<>
 
+                List<Bitmap> downloadedImages = new ArrayList<Bitmap>();
+                List<String> imageURLs = new ArrayList<String>();
+
+                String photoRegex = "changePhoto\\('(.*?)',.*?;";
+                Pattern pattern = Pattern.compile(photoRegex, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+                Matcher matcher = pattern.matcher(pageSource);
+
+                while(matcher.find())
+                {
+                    String imageURL = "http:" + matcher.group(1);
+                    Log.i("", "Attempting to download image " + imageURL);
+
+                    try
+                    {
+                        if (imageURL.length() > 0 && !imageURL.trim().equals("") && imageURL.length() > 10) // prevent false empty matches
+                        {
+                            if (!imageURLs.contains(imageURL)) // prevent duplicate image downloads
+                            {
+                                Bitmap currentPhotoBitmap = imgLoader.loadImageSync(imageURL);
+                                downloadedImages.add(currentPhotoBitmap);
+                                imageURLs.add(imageURL);
+                            }
+                        }
+                    }
+                    catch (Exception e) { Log.e("ImageDownload", e.toString() + "Image download exception! Image: " + imageURL); }
+                }
+
+                if (downloadedImages.size() == 0 || imageURLs.size() == 0)
+                {
+                    // no images found, see if there's only one image and download that
+                    Log.i("", "No images found. Checking if the item only has a single image.");
+
+                    String singlePhotoRegex = "src=\\\"(//www\\.kupujemprodajem\\.com/.*?big.*?\\.jpg)\"";
+                    Pattern singlePattern = Pattern.compile(singlePhotoRegex, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+                    Matcher singleMatcher = singlePattern.matcher(pageSource);
+
+
+                    while (singleMatcher.find())
+                    {
+                        String imageURL = "http:" + singleMatcher.group(1);
+                        Log.i("", "Attempting to download image " + imageURL);
+
+                        try
+                        {
+                            if (imageURL.length() > 0 && !imageURL.trim().equals("") && imageURL.length() > 10) // prevent false empty matches
+                            {
+                                if (!imageURLs.contains(imageURL)) // prevent duplicate image downloads
+                                {
+                                    Bitmap currentPhotoBitmap = imgLoader.loadImageSync(imageURL);
+                                    downloadedImages.add(currentPhotoBitmap);
+                                    imageURLs.add(imageURL);
+                                }
+                            }
+                        }
+                        catch (Exception e) { Log.e("ImageDownload", e.toString() + "Image download exception! Image: " + imageURL); }
+                    }
+                }
+
+                itemPhotos = downloadedImages;
+                itemPhotoURLs = imageURLs;
             }
-            catch (Exception e) { Log.e("PageDownloader", e.toString()); }
+            catch (Exception e) { Log.e("PageDownloader", e.toString() + " | " + e.getMessage() + " | " + e.getCause()); }
 
             return result;
         }
@@ -101,19 +166,25 @@ public class ItemPageActivity extends Activity {
                 @Override
                 public void run()
                 {
-//                    // TODO
-
                     Card descriptionCard = new WebViewCard(getApplicationContext(), result.descriptionHTML);
                     Card sellerInfoCard = new SellerInformationCard(getApplicationContext(), result);
+
+                    ImageGalleryCard galleryCard = new ImageGalleryCard(getApplicationContext(), itemPhotos, itemPhotoURLs);
+                    itemGalleryCard.setCard(galleryCard);
 
                     mSellerInformationCard.setCard(sellerInfoCard);
                     mItemDescriptionCard.setCard(descriptionCard);
 
-                    downloadIndicator.animate().alpha(0f).setDuration(300);
-
                     itemPrice.setText(result.price);
 
-                    itemPrice.animate().alpha(1f).setDuration(500).setListener(null);
+                    itemName.animate().alpha(1f).setDuration(800).setListener(null);
+                    itemPrice.animate().alpha(1f).setDuration(800).setListener(null);
+                    mSellerInformationCard.animate().alpha(1f).setDuration(800).setListener(null);
+                    itemGalleryCard.animate().alpha(1f).setDuration(800).setListener(null);
+                    mItemDescriptionCard.animate().alpha(1f).setDuration(800).setListener(null);
+                    sellerCardShadow.animate().alpha(1f).setDuration(800).setListener(null);
+
+                    progressBar.animate().alpha(0f).setDuration(500).setListener(null);
                 }
             });
 
@@ -126,18 +197,33 @@ public class ItemPageActivity extends Activity {
 
 
     private TextView itemName;
-    private ProgressBar downloadIndicator;
 
     private TextView itemPrice;
 
     private CardView itemGalleryCard;
+
+    private List<Bitmap> itemPhotos;
+    private List<String> itemPhotoURLs;
+
+    private CardShadowView sellerCardShadow;
+
+    private SmoothProgressBar progressBar;
+
+    private Intent shareItemIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 
         super.onCreate(savedInstanceState);
+
+//        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+//        requestWindowFeature(Window.FEATURE_PROGRESS);
+
+
         setContentView(R.layout.activity_item_page);
+
+//        setProgressBarIndeterminateVisibility(true);
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext()).build();
         imgLoader = ImageLoader.getInstance();
@@ -148,9 +234,15 @@ public class ItemPageActivity extends Activity {
 
         result = (SearchResult) getIntent().getSerializableExtra(ItemSearchFragment.SEARCH_RESULT_EXTRA_KEY);
 
+        shareItemIntent = new Intent();
+        shareItemIntent.setAction(Intent.ACTION_SEND);
+        shareItemIntent.setType("text/plain");
+        shareItemIntent.putExtra(Intent.EXTRA_TEXT, result.itemURL);
+
+
         itemName = (TextView) findViewById(R.id.itemName);
 //        itemDesc = (TextView) findViewById(R.id.itemDesc);
-        downloadIndicator = (ProgressBar) findViewById(R.id.downloadIndicator);
+//        downloadIndicator = (ProgressBar) findViewById(R.id.downloadIndicator);
 
         itemPrice = (TextView) findViewById(R.id.itemPrice);
         itemPrice.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf"));
@@ -160,12 +252,22 @@ public class ItemPageActivity extends Activity {
 
         itemName.setText(result.itemName);
         itemName.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf"));
-        itemPrice.setAlpha(0f);
 
         itemGalleryCard = (CardView) findViewById(R.id.imageGalleryCard);
 
-        ImageGalleryCard galleryCard = new ImageGalleryCard(this, new ArrayList<Bitmap>());
-        itemGalleryCard.setCard(galleryCard);
+        sellerCardShadow = (CardShadowView) findViewById(R.id.sellerCardShadow);
+
+        progressBar = (SmoothProgressBar) findViewById(R.id.downloadBar);
+
+        itemName.setAlpha(0f);
+        itemPrice.setAlpha(0f);
+        mSellerInformationCard.setAlpha(0f);
+        itemGalleryCard.setAlpha(0f);
+        mItemDescriptionCard.setAlpha(0f);
+        sellerCardShadow.setAlpha(0f);
+
+        progressBar.setAlpha(0f);
+        progressBar.animate().alpha(1f).setDuration(500).setListener(null);
 
         new PageDownloaderTask().execute(result.itemURL);
     }
@@ -175,6 +277,13 @@ public class ItemPageActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.item_page, menu);
+
+        MenuItem shareItem = menu.findItem(R.id.menu_item_share);
+        ShareActionProvider shareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
+
+        if (shareActionProvider != null)
+            shareActionProvider.setShareIntent(shareItemIntent);
+
         return true;
     }
 

@@ -17,10 +17,10 @@
         android:textSize="25sp"
         android:paddingLeft="7dp"
         android:textColor="#212121"
-        android:layout_toLeftOf="@+id/sellerYesVotes"
-        android:layout_toStartOf="@+id/sellerYesVotes"
+        android:layout_toStartOf="@+id/textView"
         android:ellipsize="end"
-        android:lines="1"/>
+        android:lines="1"
+        android:layout_toLeftOf="@+id/textView"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -48,30 +48,54 @@
         android:layout_marginLeft="6dp"/>
 
     <TextView
-        android:layout_width="65dp"
+        android:layout_width="55dp"
         android:layout_height="wrap_content"
-        android:text="\u25B2 test"
+        android:text="365"
         android:id="@+id/sellerYesVotes"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:textSize="25sp"
         android:textColor="#259b24"
-        android:gravity="left"/>
+        android:gravity="center_horizontal"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="\u25BC test"
+        android:text="20"
         android:id="@+id/sellerNoVotes"
         android:layout_below="@+id/sellerYesVotes"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:textSize="25sp"
         android:textColor="#e51c23"
-        android:layout_alignLeft="@+id/sellerYesVotes"
-        android:layout_alignStart="@+id/sellerYesVotes"
-        android:gravity="left"
-        android:layout_marginTop="-5dp"/>
+        android:layout_marginTop="-5dp"
+        android:layout_toEndOf="@+id/textView"
+        android:gravity="center_horizontal"
+        android:layout_toRightOf="@+id/textView"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="\u25B2"
+        android:id="@+id/textView"
+        android:layout_alignTop="@+id/sellerName"
+        android:layout_toLeftOf="@+id/sellerYesVotes"
+        android:layout_toStartOf="@+id/sellerYesVotes"
+        android:textSize="25sp"
+        android:layout_alignBottom="@+id/sellerName"
+        android:textColor="#259b24"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="\u25BC"
+        android:id="@+id/textView2"
+        android:layout_toStartOf="@+id/sellerYesVotes"
+        android:textSize="25sp"
+        android:layout_alignBottom="@+id/sellerNoVotes"
+        android:layout_alignTop="@+id/sellerNoVotes"
+        android:textColor="#e51c23"
+        android:layout_toLeftOf="@+id/sellerYesVotes"/>
 
 </RelativeLayout>

@@ -3,8 +3,10 @@ package com.omegavesko.kupujemprodajem;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,6 +92,8 @@ public class KategorijeFragment extends android.app.Fragment
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_kategorije, container, false);
 
+        getActivity().getActionBar().setTitle("Kategorije");
+
         categoryCardList = (CardListView) view.findViewById(R.id.categoryCardList);
 
         ArrayList<Card> cards = new ArrayList<Card>();
@@ -106,12 +110,21 @@ public class KategorijeFragment extends android.app.Fragment
                     public void onClick(Card card, View view) {
                         Log.w("CategoryCard", "Category " + cat.nameString + " clicked!");
 
-                        SearchParams params = new SearchParams("all", cat.idString, "", "all", "relevance", "");
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run()
+                            {
+                                getActivity().getActionBar().setTitle(cat.nameString);
 
-                        FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-                        android.app.Fragment fragment = ItemSearchFragment.newInstance(params);
-                        ft.replace(R.id.container, fragment).addToBackStack("startSearch");
-                        ft.commit();
+                                SearchParams params = new SearchParams("all", cat.idString, "", "all", "relevance", "");
+
+                                FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+                                android.app.Fragment fragment = ItemSearchFragment.newInstance(params);
+                                ft.replace(R.id.container, fragment).addToBackStack("startSearch");
+                                ft.commit();
+                            }
+                        }, 800);
                     }
                 });
 

@@ -50,5 +50,7 @@ public class WebViewCard extends Card
 //        mCardWebView.getSettings().setLoadWithOverviewMode(true);
 //        mCardWebView.getSettings().setUseWideViewPort(true);
         mCardWebView.loadData(viewHTML, "text/html; charset=UTF-8", null);
+        mCardWebView.setFocusable(false);
+        mCardWebView.setClickable(false);
     }
 }

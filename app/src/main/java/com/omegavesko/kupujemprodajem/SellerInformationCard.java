@@ -72,10 +72,10 @@ public class SellerInformationCard extends Card
         mSellerPhoneNumber.setImageBitmap(pageData.memberPhoneNumber);
         mSellerPhoneNumber.setScaleType(ImageView.ScaleType.FIT_START);
 
-        mSellerYesVotes.setText("\u25B2" + pageData.memberYesVotes);
+        mSellerYesVotes.setText(pageData.memberYesVotes);
         mSellerYesVotes.setTypeface(robotoLight);
 
-        mSellerNoVotes.setText("\u25BC" + pageData.memberNoVotes);
+        mSellerNoVotes.setText(pageData.memberNoVotes);
         mSellerNoVotes.setTypeface(robotoLight);
 
     }

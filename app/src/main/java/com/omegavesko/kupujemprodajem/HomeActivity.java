@@ -467,20 +467,54 @@ public class HomeActivity extends Activity
 
         public void PerformSearch()
         {
-            getActivity().getActionBar().setTitle("Rezultati pretrage");
+            // try to prevent the keyboard randomly popping up again
+            pretragaEditText.clearFocus();
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(pretragaEditText.getWindowToken(), 0);
 
-            SearchParams params = new SearchParams
-                    (((WebsiteHandler.GenericID) tipOglasaSpinner.getSelectedItem()).idString,
-                            ((WebsiteHandler.Category) kategorijaSpinner.getSelectedItem()).idString,
-                            ((WebsiteHandler.Location) mestoSpinner.getSelectedItem()).idString,
-                            ((WebsiteHandler.GenericID) stanjeSpinner.getSelectedItem()).idString,
-                            ((WebsiteHandler.GenericID) prikaziPrvoSpinner.getSelectedItem()).idString,
-                            pretragaEditText.getText().toString().replace(" ", "+"));
+            logoText1.animate().alpha(0f).setDuration(800).setListener(null);
+            logoText2.animate().alpha(0f).setDuration(800).setListener(null);
 
-            FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-            Fragment fragment = ItemSearchFragment.newInstance(params);
-            ft.replace(R.id.container, fragment).addToBackStack("startSearch");
-            ft.commit();
+            pretragaEditText.animate().alpha(0f).setDuration(800).setListener(null);
+
+            tipOglasaLabel.animate().alpha(0f).setDuration(800).setListener(null);
+            tipOglasaSpinner.animate().alpha(0f).setDuration(800).setListener(null);
+
+            kategorijaLabel.animate().alpha(0f).setDuration(800).setListener(null);
+            kategorijaSpinner.animate().alpha(0f).setDuration(800).setListener(null);
+
+            mestoLabel.animate().alpha(0f).setDuration(800).setListener(null);
+            mestoSpinner.animate().alpha(0f).setDuration(800).setListener(null);
+
+            stanjeLabel.animate().alpha(0f).setDuration(800).setListener(null);
+            stanjeSpinner.animate().alpha(0f).setDuration(800).setListener(null);
+
+            prikaziPrvoLabel.animate().alpha(0f).setDuration(800).setListener(null);
+            prikaziPrvoSpinner.animate().alpha(0f).setDuration(800).setListener(null);
+
+            searchButton.animate().alpha(0f).setDuration(800).setListener(null);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run()
+                {
+                    getActivity().getActionBar().setTitle("Rezultati pretrage");
+
+                    SearchParams params = new SearchParams
+                            (((WebsiteHandler.GenericID) tipOglasaSpinner.getSelectedItem()).idString,
+                                    ((WebsiteHandler.Category) kategorijaSpinner.getSelectedItem()).idString,
+                                    ((WebsiteHandler.Location) mestoSpinner.getSelectedItem()).idString,
+                                    ((WebsiteHandler.GenericID) stanjeSpinner.getSelectedItem()).idString,
+                                    ((WebsiteHandler.GenericID) prikaziPrvoSpinner.getSelectedItem()).idString,
+                                    pretragaEditText.getText().toString().replace(" ", "+"));
+
+                    FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+                    Fragment fragment = ItemSearchFragment.newInstance(params);
+                    ft.replace(R.id.container, fragment).addToBackStack("startSearch");
+                    ft.commit();
+                }
+            }, 800);
         }
     }
 

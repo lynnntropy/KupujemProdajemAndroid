@@ -30,6 +30,6 @@ public class SearchResult implements Serializable
 
     public String toString()
     {
-        return "[ " + itemName + " | " + itemDesc + " | " + itemURL + " ]";
+        return "[ " + itemName + " | " + itemDesc + " | " + itemURL + " | " + itemLocation + " ]";
     }
 }

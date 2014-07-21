@@ -13,9 +13,37 @@
 
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="15dp"
-    android:paddingBottom="100dp"
+    android:paddingBottom="50dp"
     android:background="#eeeeee">
+
+        <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/downloadBar"
+
+            android:indeterminate="true"
+
+            app:spb_sections_count="4"
+            app:spb_color="@color/lighter_red"
+            app:spb_speed="2.0"
+            app:spb_stroke_width="7dp"
+            app:spb_stroke_separator_length="4dp"
+            app:spb_reversed="false"
+            app:spb_mirror_mode="false"
+            app:spb_progressiveStart_activated="false"
+            app:spb_progressiveStart_speed="1.5"
+            app:spb_progressiveStop_speed="3.4"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_below="@+id/itemName"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="visible"
+            android:layout_marginTop="-5dp"/>
 
 
         <it.gmariotti.cardslib.library.view.CardView
@@ -29,7 +57,8 @@
             android:layout_below="@+id/sellerInformationCard"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="3dp"
-            />
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"/>
 
 
         <TextView
@@ -39,8 +68,14 @@
             android:id="@+id/itemName"
             android:textSize="25sp"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal"
+            android:paddingTop="15dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"/>
 
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
@@ -48,7 +83,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/downloadIndicator"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -76,7 +112,8 @@
             android:layout_below="@+id/imageGalleryCard"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="3dp"
-            />
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"/>
 
         <it.gmariotti.cardslib.library.view.CardView
             android:layout_width="wrap_content"
@@ -90,18 +127,21 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
 
-            />
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"/>
 
         <it.gmariotti.cardslib.library.view.component.CardShadowView
             style="@style/card.shadow_outer_layout"
-            android:id="@+id/card_shadow_layout"
+            android:id="@+id/sellerCardShadow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
 
             android:layout_below="@id/imageGalleryCard"
-            android:layout_marginTop="-3dp"/>
+            android:layout_marginTop="-3dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"/>
 
     </RelativeLayout>
 

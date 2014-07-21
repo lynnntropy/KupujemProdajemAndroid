@@ -6,11 +6,18 @@
     android:id="@+id/galleryScrollView"
     android:padding="5dp">
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/imageHolderLayout">
-    </LinearLayout>
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/imageHolderLayout"
+            android:layout_centerInParent="true">
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </HorizontalScrollView>

@@ -25,22 +25,13 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.CardThumbnail;
 import it.gmariotti.cardslib.library.view.CardListView;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ItemSearchFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ItemSearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
 public class ItemSearchFragment extends Fragment
 {
     public static final String SEARCH_RESULT_EXTRA_KEY = "com.omegavesko.kupujemprodajem.SEARCH_RESULT";
@@ -115,28 +106,13 @@ public class ItemSearchFragment extends Fragment
                 @Override
                 public void run()
                 {
-//                    kategorijaSpinner.setAdapter(new StyledSpinnerCategoryAdapter(getActivity(), dbHandler.getAllCategories()));
-//                    mestoSpinner.setAdapter(new StyledSpinnerLocationAdapter(getActivity(), dbHandler.getAllLocations()));
-//
-//                    downloadButton.animate().alpha(1f).setDuration(300).setListener(null);
-//                    downloadBar.animate().alpha(0f).setDuration(300).setListener(null);
-//
-////                        kategorijaSpinner.setAdapter(new StyledSpinnerStringAdapter(getActivity(), categories.toArray(new WebsiteHandler.Category[categories.size()])));
-//
-//                    final Handler handler = new Handler();
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            downloadDialog.dismiss();
-//                        }
-//                    }, 600);
 
                     ArrayList<Card> cards = new ArrayList<Card>();
 
                     Log.i("", "Search results retrieved:");
                     for (SearchResult res: results)
                     {
-                        if (res.itemName.length() > 0)
+                        if (res.itemName.length() > 0 && res.itemLocation.length() > 0 && !res.itemLocation.trim().isEmpty() && !res.itemLocation.equals("\u00A0") && res.itemLocation != null)
                         {
                             Log.i("", res.toString());
 
@@ -166,8 +142,15 @@ public class ItemSearchFragment extends Fragment
                         }
                     }
 
+                    LoadMoreCard moreResultsCard = new LoadMoreCard(getActivity());
+                    // TODO: Add an on click listener to the card
+                    cards.add(moreResultsCard);
+
                     CardArrayAdapter cardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
                     searchCardList.setAdapter(cardArrayAdapter);
+
+                    searchCardList.animate().alpha(1f).setDuration(800).setListener(null);
+                    downloadBar.animate().alpha(0f).setDuration(800).setListener(null);
                 }
             });
 
@@ -179,6 +162,7 @@ public class ItemSearchFragment extends Fragment
 
     // Views contained in the fragment
     private CardListView searchCardList;
+    private SmoothProgressBar downloadBar;
 
     // Variables and constants the Fragment uses to function
     private String queryURL;
@@ -225,29 +209,14 @@ public class ItemSearchFragment extends Fragment
         View rootView = inflater.inflate(R.layout.fragment_item_search, container, false);
 
         searchCardList = (CardListView) rootView.findViewById(R.id.searchCardList);
+        searchCardList.setAlpha(0f);
+
+        downloadBar = (SmoothProgressBar) rootView.findViewById(R.id.downloadBar);
+        downloadBar.setAlpha(0f);
+        downloadBar.animate().alpha(1f).setDuration(500).setListener(null);
 
         // TODO: debug!
         new PageDownloaderTask().execute(this.queryURL);
-
-//        ArrayList<Card> cards = new ArrayList<Card>();
-//
-//        for (int i = 0; i < 500; i++)
-//        {
-//            Card card = new Card(getActivity());
-//
-//            CardHeader header = new CardHeader(getActivity());
-//            header.setTitle("Predmet broj " + i);
-//            card.addCardHeader(header);
-//
-//            CardThumbnail thumb = new CardThumbnail(getActivity());
-//            thumb.setDrawableResource(R.drawable.ic_launcher);
-//            card.addCardThumbnail(thumb);
-//
-//            cards.add(card);
-//        }
-//
-//        CardArrayAdapter cardArrayAdapter= new CardArrayAdapter(getActivity(), cards);
-//        searchCardList.setAdapter(cardArrayAdapter);
 
         return rootView;
     }

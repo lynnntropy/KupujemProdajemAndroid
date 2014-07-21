@@ -55,7 +55,7 @@ public class SearchResultCard extends Card
         if (itemDesctiption != null)
         {
             itemThumbView.setImageBitmap(result.itemThumbnail);
-            itemThumbView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            itemThumbView.setScaleType(ImageView.ScaleType.FIT_START);
             itemThumbView.setAdjustViewBounds(true);
 
             itemDesctiption.setText(result.itemDesc);
