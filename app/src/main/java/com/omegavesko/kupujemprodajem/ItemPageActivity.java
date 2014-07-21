@@ -62,71 +62,49 @@ public class ItemPageActivity extends Activity {
 
             ItemPageData result = new ItemPageData();
 
-            try
+            boolean finishedCleanly = false;
+            int tryNumber = 0;
+
+            while (!finishedCleanly)
             {
-                Log.i("", "Downloading page...");
-                Document itemPage = Jsoup.connect(params[0]).get();
-                String pageSource = itemPage.toString();
-                Log.i("", "Download complete. Starting parse.");
+                tryNumber++;
 
-                result.title = itemPage.select("div.oglasHolder").select("h1").first().text();
-
-                // now passing HTML to a WebViewCard instead of trying to parse it ourselves
-                result.descriptionHTML = itemPage.select("div.roundBorder").first().html();
-
-                result.price = itemPage.select("div.price").first().text();
-                result.viewCount = itemPage.select("td.lineSeparator").first().select("div").get(1).text();
-
-                result.memberLocation = itemPage.select("td.lineSepar1ator").select("tr").get(4).text();
-                result.memberName = itemPage.select("td.lineSepar1ator").select("tr").get(1).text().replace(" offline", "").replace(" online", "");
-                result.memberYesVotes = itemPage.select("td.lineSepar1ator").select("tr").get(2).select("span.positiveColor").text();
-                result.memberNoVotes = itemPage.select("td.lineSepar1ator").select("tr").get(2).select("span.negativeColor").text();
-
-                String phoneNumberImageURL = itemPage.select("div.phone-number").select("img").get(1).attr("abs:src");
-                result.memberPhoneNumber = imgLoader.loadImageSync(phoneNumberImageURL);
-
-                // TODO: Load full-size photos from the page and put them into the List<>
-
-                List<Bitmap> downloadedImages = new ArrayList<Bitmap>();
-                List<String> imageURLs = new ArrayList<String>();
-
-                String photoRegex = "changePhoto\\('(.*?)',.*?;";
-                Pattern pattern = Pattern.compile(photoRegex, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
-                Matcher matcher = pattern.matcher(pageSource);
-
-                while(matcher.find())
+                try
                 {
-                    String imageURL = "http:" + matcher.group(1);
-                    Log.i("", "Attempting to download image " + imageURL);
+                    Log.i("", "Downloading page...");
+                    Document itemPage = Jsoup.connect(params[0]).get();
+                    String pageSource = itemPage.toString();
+                    Log.i("", "Download complete. Starting parse.");
 
-                    try
+                    result.title = itemPage.select("div.oglasHolder").select("h1").first().text();
+
+                    // now passing HTML to a WebViewCard instead of trying to parse it ourselves
+                    result.descriptionHTML = itemPage.select("div.roundBorder").first().html();
+
+                    if (itemPage.select("div.price").first() != null)
                     {
-                        if (imageURL.length() > 0 && !imageURL.trim().equals("") && imageURL.length() > 10) // prevent false empty matches
-                        {
-                            if (!imageURLs.contains(imageURL)) // prevent duplicate image downloads
-                            {
-                                Bitmap currentPhotoBitmap = imgLoader.loadImageSync(imageURL);
-                                downloadedImages.add(currentPhotoBitmap);
-                                imageURLs.add(imageURL);
-                            }
-                        }
+                        result.price = itemPage.select("div.price").first().text();
+                        result.viewCount = itemPage.select("td.lineSeparator").first().select("div").get(1).text();
                     }
-                    catch (Exception e) { Log.e("ImageDownload", e.toString() + "Image download exception! Image: " + imageURL); }
-                }
 
-                if (downloadedImages.size() == 0 || imageURLs.size() == 0)
-                {
-                    // no images found, see if there's only one image and download that
-                    Log.i("", "No images found. Checking if the item only has a single image.");
+                    result.memberLocation = itemPage.select("td.lineSepar1ator").select("tr").get(4).text();
+                    result.memberName = itemPage.select("td.lineSepar1ator").select("tr").get(1).text().replace(" offline", "").replace(" online", "");
+                    result.memberYesVotes = itemPage.select("td.lineSepar1ator").select("tr").get(2).select("span.positiveColor").text();
+                    result.memberNoVotes = itemPage.select("td.lineSepar1ator").select("tr").get(2).select("span.negativeColor").text();
 
-                    String singlePhotoRegex = "src=\\\"(//www\\.kupujemprodajem\\.com/.*?big.*?\\.jpg)\"";
-                    Pattern singlePattern = Pattern.compile(singlePhotoRegex, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
-                    Matcher singleMatcher = singlePattern.matcher(pageSource);
+                    String phoneNumberImageURL = itemPage.select("div.phone-number").select("img").get(1).attr("abs:src");
+                    result.memberPhoneNumber = imgLoader.loadImageSync(phoneNumberImageURL);
 
+                    List<Bitmap> downloadedImages = new ArrayList<Bitmap>();
+                    List<String> imageURLs = new ArrayList<String>();
 
-                    while (singleMatcher.find())
+                    String photoRegex = "changePhoto\\('(.*?)',.*?;";
+                    Pattern pattern = Pattern.compile(photoRegex, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+                    Matcher matcher = pattern.matcher(pageSource);
+
+                    while (matcher.find())
                     {
-                        String imageURL = "http:" + singleMatcher.group(1);
+                        String imageURL = "http:" + matcher.group(1);
                         Log.i("", "Attempting to download image " + imageURL);
 
                         try
@@ -140,15 +118,55 @@ public class ItemPageActivity extends Activity {
                                     imageURLs.add(imageURL);
                                 }
                             }
+                        } catch (Exception e)
+                        {
+                            Log.e("ImageDownload", e.toString() + "Image download exception! Image: " + imageURL);
                         }
-                        catch (Exception e) { Log.e("ImageDownload", e.toString() + "Image download exception! Image: " + imageURL); }
                     }
-                }
 
-                itemPhotos = downloadedImages;
-                itemPhotoURLs = imageURLs;
+                    if (downloadedImages.size() == 0 || imageURLs.size() == 0)
+                    {
+                        // no images found, see if there's only one image and download that
+                        Log.i("", "No images found. Checking if the item only has a single image.");
+
+                        String singlePhotoRegex = "src=\\\"(//www\\.kupujemprodajem\\.com/.*?big.*?\\.(jpg|png))\"";
+                        Pattern singlePattern = Pattern.compile(singlePhotoRegex, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+                        Matcher singleMatcher = singlePattern.matcher(pageSource);
+
+
+                        while (singleMatcher.find())
+                        {
+                            String imageURL = "http:" + singleMatcher.group(1);
+                            Log.i("", "Attempting to download image " + imageURL);
+
+                            try
+                            {
+                                if (imageURL.length() > 0 && !imageURL.trim().equals("") && imageURL.length() > 10) // prevent false empty matches
+                                {
+                                    if (!imageURLs.contains(imageURL)) // prevent duplicate image downloads
+                                    {
+                                        Bitmap currentPhotoBitmap = imgLoader.loadImageSync(imageURL);
+                                        downloadedImages.add(currentPhotoBitmap);
+                                        imageURLs.add(imageURL);
+                                    }
+                                }
+                            } catch (Exception e)
+                            {
+                                Log.e("ImageDownload", e.toString() + "Image download exception! Image: " + imageURL);
+                            }
+                        }
+                    }
+
+                    itemPhotos = downloadedImages;
+                    itemPhotoURLs = imageURLs;
+
+                    finishedCleanly = true;
+                }
+                catch (Exception e)
+                {
+                    Log.e("PageDownloader", "Exception!", e);
+                }
             }
-            catch (Exception e) { Log.e("PageDownloader", e.toString() + " | " + e.getMessage() + " | " + e.getCause()); }
 
             return result;
         }

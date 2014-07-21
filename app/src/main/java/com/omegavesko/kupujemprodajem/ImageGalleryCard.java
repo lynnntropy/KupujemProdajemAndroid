@@ -56,7 +56,7 @@ public class ImageGalleryCard extends Card
         imageHolder = (LinearLayout) parent.findViewById(R.id.imageHolderLayout);
 
 
-        if (bitmapsToDisplay.size() > 0)
+        if (bitmapsToDisplay != null && bitmapsToDisplay.size() > 0)
         {
             Log.i("ImageGalleryCard", "----- Adding images to ScrollView -----");
 

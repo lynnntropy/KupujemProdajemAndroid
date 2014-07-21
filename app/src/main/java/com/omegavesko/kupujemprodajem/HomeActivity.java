@@ -9,12 +9,14 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +30,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.PointTarget;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
 
 import org.jsoup.nodes.Document;
 
@@ -58,20 +66,33 @@ public class HomeActivity extends Activity
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        // TODO: Properly set up the sliding menu!
+
+        SlidingMenu navDrawer = new SlidingMenu(this);
+        navDrawer.setMode(SlidingMenu.LEFT);
+        navDrawer.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        navDrawer.setShadowWidthRes(R.dimen.shadow_width);
+//        navDrawer.setShadowDrawable(R.drawable.shadow);
+        navDrawer.setBehindWidth(200);
+        navDrawer.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        navDrawer.setFadeDegree(0.35f);
+        navDrawer.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+        navDrawer.setMenu(R.layout.navdrawer_layout);
+
         getActionBar().setDisplayShowHomeEnabled(false);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+//        mNavigationDrawerFragment = (NavigationDrawerFragment)
+//                getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
-
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+//
+//        // Set up the drawer.
+//        mNavigationDrawerFragment.setUp(
+//                R.id.navigation_drawer,
+//                (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
     @Override
@@ -137,14 +158,14 @@ public class HomeActivity extends Activity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.home, menu);
-            restoreActionBar();
-            return true;
-        }
+//        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+//            // Only show items in the action bar relevant to this screen
+//            // if the drawer is not showing. Otherwise, let the drawer
+//            // decide what to show in the action bar.
+//            getMenuInflater().inflate(R.menu.home, menu);
+//            restoreActionBar();
+//            return true;
+//        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -157,6 +178,8 @@ public class HomeActivity extends Activity
         if (id == R.id.action_settings) {
             return true;
         }
+
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -307,6 +330,9 @@ public class HomeActivity extends Activity
             View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
             getActivity().getActionBar().setTitle("Kupujem Prodajem");
+
+            // TODO: Debug, shouldn't get called every time
+            showTutorial();
 
             SharedPreferences settings = getActivity().getSharedPreferences("preferences", 0);
             boolean firstLaunch = settings.getBoolean("firstLaunch", true);
@@ -515,6 +541,24 @@ public class HomeActivity extends Activity
                     ft.commit();
                 }
             }, 800);
+        }
+
+        public void showTutorial()
+        {
+            // get the screen dimensions so we know where to put the marker
+            Display display = getActivity().getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int width = size.x;
+            int height = size.y;
+
+            new ShowcaseView.Builder(getActivity())
+                    .setTarget(new PointTarget(0, height / 2))
+                    .setContentTitle("Fioka na izvlačenje")
+                    .setContentText("Povucite prstom na desno da biste otvorili meni sa dodatnim opcijama.")
+                    .hideOnTouchOutside()
+                    .setStyle(R.style.CustomShowcaseTheme)
+                    .build();
         }
     }
 

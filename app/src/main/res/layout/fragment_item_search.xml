@@ -41,4 +41,15 @@
         card:list_card_layout_resourceID="@layout/list_card_thumbnail_layout"
         style="@style/list_card.thumbnail"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Internet veza prekinuta. Pokušavam ponovo.."
+        android:id="@+id/tryAgainText"
+        android:gravity="center_horizontal"
+        android:textSize="30sp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
 </RelativeLayout>

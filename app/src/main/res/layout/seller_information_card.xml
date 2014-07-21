@@ -14,13 +14,13 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textSize="25sp"
-        android:paddingLeft="7dp"
-        android:textColor="#212121"
-        android:layout_toStartOf="@+id/textView"
+        android:textSize="28sp"
+        android:textColor="#ff766f60"
+        android:layout_toStartOf="@+id/tryAgainText"
         android:ellipsize="end"
         android:lines="1"
-        android:layout_toLeftOf="@+id/textView"/>
+        android:layout_toLeftOf="@+id/tryAgainText"
+        android:layout_marginLeft="7dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,12 +28,13 @@
         android:text="Seller Location"
         android:id="@+id/sellerLocation"
         android:layout_below="@+id/sellerName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textSize="20sp"
-        android:paddingLeft="7dp"
-        android:textColor="#424242"
-        android:layout_marginTop="-8dp"/>
+        android:textSize="17sp"
+        android:textColor="#ff938a79"
+        android:layout_marginTop="-5dp"
+        android:layout_alignLeft="@+id/sellerName"
+        android:layout_alignStart="@+id/sellerName"
+        android:layout_toLeftOf="@+id/tryAgainText"
+        android:layout_toStartOf="@+id/tryAgainText"/>
 
     <ImageView
         android:layout_width="170dp"
@@ -70,15 +71,15 @@
         android:textSize="25sp"
         android:textColor="#e51c23"
         android:layout_marginTop="-5dp"
-        android:layout_toEndOf="@+id/textView"
+        android:layout_toEndOf="@+id/tryAgainText"
         android:gravity="center_horizontal"
-        android:layout_toRightOf="@+id/textView"/>
+        android:layout_toRightOf="@+id/tryAgainText"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="\u25B2"
-        android:id="@+id/textView"
+        android:id="@+id/tryAgainText"
         android:layout_alignTop="@+id/sellerName"
         android:layout_toLeftOf="@+id/sellerYesVotes"
         android:layout_toStartOf="@+id/sellerYesVotes"

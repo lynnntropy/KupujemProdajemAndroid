@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -65,30 +67,54 @@ public class ItemSearchFragment extends Fragment
 
             List<SearchResult> results = new ArrayList<SearchResult>();
 
-            try
+            boolean finishedCleanly = false;
+            int tryNumber = 0;
+
+            while (!finishedCleanly)
             {
-                Document searchPage = Jsoup.connect(params[0]).get();
+                tryNumber++;
 
-                Elements searchResults = searchPage.select("div.item.clearfix");
-
-                for (Element elem: searchResults)
+                if (tryNumber == 2)
                 {
-                    String itemName = elem.select("a.adName").text();
-                    String itemLink = elem.select("a.adName").attr("abs:href");
-                    String itemDesc = elem.select("p.adDescription").text();
+                    // fade in the 'trying again' message
+                    getActivity().runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            tryAgainText.animate().alpha(1f).setDuration(800).setListener(null);
+                        }
+                    });
+                }
 
-                    String itemThumbnailURL = elem.select("div.adImgHolder").select("img").attr("abs:src");
-                    Bitmap itemThumbnail = imgLoader.loadImageSync(itemThumbnailURL);
+                try
+                {
+                    Document searchPage = Jsoup.connect(params[0]).get();
 
-                    String itemPrice = elem.select("span.adPrice").text();
-                    String itemLocation = elem.select("section.locationSec").text();
+                    Elements searchResults = searchPage.select("div.item.clearfix");
 
-                    results.add(new SearchResult(itemName, itemDesc, itemLink, itemThumbnail, itemPrice, itemLocation));
+                    for (Element elem : searchResults)
+                    {
+                        String itemName = elem.select("a.adName").text();
+                        String itemLink = elem.select("a.adName").attr("abs:href");
+                        String itemDesc = elem.select("p.adDescription").text();
 
-//                    Log.i("PageDownloader", "Found search result: " + itemName + " | " + itemDesc + " | " + itemLink);
+                        String itemThumbnailURL = elem.select("div.adImgHolder").select("img").attr("abs:src");
+                        Bitmap itemThumbnail = imgLoader.loadImageSync(itemThumbnailURL);
+
+                        String itemPrice = elem.select("span.adPrice").text();
+                        String itemLocation = elem.select("section.locationSec").text();
+
+                        results.add(new SearchResult(itemName, itemDesc, itemLink, itemThumbnail, itemPrice, itemLocation));
+                    }
+
+                    finishedCleanly = true;
+                }
+                catch (Exception e)
+                {
+                    Log.e("PageDownloader", e.toString());
                 }
             }
-            catch (Exception e) { Log.e("PageDownloader", e.toString()); }
 
             return results;
         }
@@ -106,6 +132,8 @@ public class ItemSearchFragment extends Fragment
                 @Override
                 public void run()
                 {
+
+                    tryAgainText.animate().alpha(0f).setDuration(500).setListener(null);
 
                     ArrayList<Card> cards = new ArrayList<Card>();
 
@@ -163,6 +191,7 @@ public class ItemSearchFragment extends Fragment
     // Views contained in the fragment
     private CardListView searchCardList;
     private SmoothProgressBar downloadBar;
+    private TextView tryAgainText;
 
     // Variables and constants the Fragment uses to function
     private String queryURL;
@@ -170,6 +199,7 @@ public class ItemSearchFragment extends Fragment
     private OnFragmentInteractionListener mListener;
 
     private ImageLoader imgLoader;
+
 
     public static ItemSearchFragment newInstance(SearchParams params) {
         ItemSearchFragment fragment = new ItemSearchFragment();
@@ -214,6 +244,10 @@ public class ItemSearchFragment extends Fragment
         downloadBar = (SmoothProgressBar) rootView.findViewById(R.id.downloadBar);
         downloadBar.setAlpha(0f);
         downloadBar.animate().alpha(1f).setDuration(500).setListener(null);
+
+        tryAgainText = (TextView) rootView.findViewById(R.id.tryAgainText);
+        tryAgainText.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Light.ttf"));
+        tryAgainText.setAlpha(0f);
 
         // TODO: debug!
         new PageDownloaderTask().execute(this.queryURL);
