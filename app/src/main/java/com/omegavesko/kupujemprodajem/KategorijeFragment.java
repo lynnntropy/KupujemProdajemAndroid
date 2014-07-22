@@ -92,7 +92,10 @@ public class KategorijeFragment extends android.app.Fragment
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_kategorije, container, false);
 
-        getActivity().getActionBar().setTitle("Kategorije");
+        OmegaUtil.setTitleWithFont(
+                getActivity(), "Kategorije", OmegaUtil.TITLE_FONT_NAME, OmegaUtil.dpToPixels(getActivity(), 25f));
+
+//        getActivity().getActionBar().setTitle("Kategorije");
 
         categoryCardList = (CardListView) view.findViewById(R.id.categoryCardList);
 
@@ -115,7 +118,9 @@ public class KategorijeFragment extends android.app.Fragment
                             @Override
                             public void run()
                             {
-                                getActivity().getActionBar().setTitle(cat.nameString);
+//                                getActivity().getActionBar().setTitle(cat.nameString);
+                                OmegaUtil.setTitleWithFont(
+                                        getActivity(), cat.nameString, OmegaUtil.TITLE_FONT_NAME, OmegaUtil.dpToPixels(getActivity(), 25f));
 
                                 SearchParams params = new SearchParams("all", cat.idString, "", "all", "relevance", "");
 

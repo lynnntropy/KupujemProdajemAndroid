@@ -38,7 +38,7 @@ public class DrawerListAdapter extends ArrayAdapter<String> {
     private Typeface robotoLight;
     private SlidingMenu drawerInstance;
 
-    public DrawerListAdapter(Context context, SlidingMenu drawerInstance)
+    public DrawerListAdapter(Context context)
     {
         super(context, R.layout.drawer_row);
         this.context = context;
@@ -47,7 +47,7 @@ public class DrawerListAdapter extends ArrayAdapter<String> {
         activitiesToList.add(new ActivityToLaunch("Pretraga", HomeActivity.class));
         activitiesToList.add(new ActivityToLaunch("Kategorije", KategorijeActivity.class));
 
-        this.drawerInstance = drawerInstance;
+//        this.drawerInstance = drawerInstance;
 
         robotoLight = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf");
     }
@@ -76,25 +76,6 @@ public class DrawerListAdapter extends ArrayAdapter<String> {
             LinearLayout layout = (LinearLayout) rowView.findViewById(R.id.rowRootLayout);
             layout.setBackgroundResource(R.drawable.selected_drawer_item);
         }
-
-//        rowView.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View view)
-//            {
-////                drawerInstance.toggle();
-//
-////                final Handler handler = new Handler();
-////                    handler.postDelayed(new Runnable() {
-////                        @Override
-////                        public void run()
-////                        {
-////                            Intent intent = new Intent(context, activitiesToList.get(position).activity);
-////                            context.startActivity(intent);
-////                        }
-////                    }, 500);
-//            }
-//        });
 
         return rowView;
     }

@@ -1,9 +1,20 @@
 package com.omegavesko.kupujemprodajem;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Handler;
+import android.support.v4.widget.DrawerLayout;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
+import android.text.style.MetricAffectingSpan;
+import android.text.style.TypefaceSpan;
+import android.util.DisplayMetrics;
+import android.util.LruCache;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -15,40 +26,78 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
  */
 public class OmegaUtil
 {
-    public static void initSlidingMenu(final Context context)
+    public static final String TITLE_FONT_NAME = "RobotoCondensed-Regular.ttf";
+
+    public static void initNavigationDrawer(Activity activity, NavigationDrawerFragment drawerFragment, int fragmentId, DrawerLayout layout)
     {
-        final SlidingMenu navDrawer = new SlidingMenu(context);
-        navDrawer.setMode(SlidingMenu.LEFT);
-        navDrawer.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-//        navDrawer.setShadowWidthRes(R.dimen.shadow_width);
-//        navDrawer.setShadowDrawable(R.drawable.drawer_shadow);
-//        navDrawer.setBehindWidth(200);
-        navDrawer.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        navDrawer.setFadeDegree(0.35f);
-        navDrawer.attachToActivity((Activity) context, SlidingMenu.SLIDING_CONTENT);
-        navDrawer.setMenu(R.layout.navdrawer_layout);
+        activity.getActionBar().setDisplayShowHomeEnabled(true);
 
-        ListView drawerList =  (ListView) navDrawer.findViewById(R.id.drawerList);
-        final DrawerListAdapter drawerListAdapter = new DrawerListAdapter(context, navDrawer);
-        drawerList.setAdapter(drawerListAdapter);
+        // Set up the drawer.
+        drawerFragment.setUp(fragmentId, layout);
+    }
 
-        drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l)
-            {
-                navDrawer.toggle();
+    public static void setTitleWithFont(Activity activity, String title, String fontFileName, float textSize)
+    {
+        SpannableString s = new SpannableString(title);
+        s.setSpan(new TypefaceSpan(activity, fontFileName, textSize), 0, s.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run()
-                    {
-                        Intent intent = new Intent(context, drawerListAdapter.activitiesToList.get(i).activity);
-                        context.startActivity(intent);
-                    }
-                }, 500);
+        // Update the action bar title with the TypefaceSpan instance
+        ActionBar actionBar = activity.getActionBar();
+        actionBar.setTitle(s);
+
+    }
+
+    public static float dpToPixels(Context context, float dp)
+    {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        float fpixels = metrics.density * dp;
+
+        return  (int) (fpixels + 0.5f);
+    }
+
+    public static class TypefaceSpan extends MetricAffectingSpan
+    {
+        /** An <code>LruCache</code> for previously loaded typefaces. */
+        private static LruCache<String, Typeface> sTypefaceCache =
+                new LruCache<String, Typeface>(12);
+
+        private Typeface mTypeface;
+        private float fontSize;
+
+        /**
+         * Load the {@link Typeface} and apply to a {@link Spannable}.
+         */
+        public TypefaceSpan(Context context, String typefaceName, float fontSize) {
+            mTypeface = sTypefaceCache.get(typefaceName);
+
+            this.fontSize = fontSize;
+
+            if (mTypeface == null) {
+                mTypeface = Typeface.createFromAsset(context.getApplicationContext()
+                        .getAssets(), String.format("fonts/%s", typefaceName));
+
+                // Cache the loaded Typeface
+                sTypefaceCache.put(typefaceName, mTypeface);
             }
-        });
+        }
+
+        @Override
+        public void updateMeasureState(TextPaint p) {
+            p.setTypeface(mTypeface);
+            p.setTextSize(fontSize);
+
+            // Note: This flag is required for proper typeface rendering
+            p.setFlags(p.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+        }
+
+        @Override
+        public void updateDrawState(TextPaint tp) {
+            tp.setTypeface(mTypeface);
+            tp.setTextSize(fontSize);
+
+            // Note: This flag is required for proper typeface rendering
+            tp.setFlags(tp.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+        }
     }
 }

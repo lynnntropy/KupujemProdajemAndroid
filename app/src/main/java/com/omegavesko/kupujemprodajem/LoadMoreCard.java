@@ -22,6 +22,7 @@ import android.widget.TextView;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import it.gmariotti.cardslib.library.internal.Card;
 
 /**
@@ -32,6 +33,9 @@ public class LoadMoreCard extends Card
     private Context context;
 
     private void init() {}
+
+    public TextView promptText;
+    public SmoothProgressBar progressBar;
 
     public LoadMoreCard(Context context)
     {
@@ -45,7 +49,19 @@ public class LoadMoreCard extends Card
         // er, nothing to set up? :P
         // maybe just change the font..
 
-        TextView text = (TextView) parent.findViewById(R.id.loadMoreText);
-        text.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
+        promptText = (TextView) parent.findViewById(R.id.loadMoreText);
+        promptText.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
+
+        progressBar = (SmoothProgressBar) parent.findViewById(R.id.loadMoreProgressBar);
+        progressBar.setAlpha(0f);
+
+//        this.getCardView().setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                Log.i("", "Load more card clicked!");
+//            }
+//        });
     }
 }

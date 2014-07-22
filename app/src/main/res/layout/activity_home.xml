@@ -26,6 +26,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:name="com.omegavesko.kupujemprodajem.NavigationDrawerFragment"
-        tools:layout="@layout/fragment_navigation_drawer" />
+        tools:layout="@layout/navdrawer_layout" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -3,6 +3,7 @@ package com.omegavesko.kupujemprodajem;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -87,13 +88,32 @@ public class ItemPageActivity extends Activity {
                         result.viewCount = itemPage.select("td.lineSeparator").first().select("div").get(1).text();
                     }
 
-                    result.memberLocation = itemPage.select("td.lineSepar1ator").select("tr").get(4).text();
+                    boolean hasPhoneNumber = true;
+                    try
+                    {
+                        result.memberLocation = itemPage.select("td.lineSepar1ator").select("tr").get(4).text();
+                    }
+                    catch (Exception e)
+                    {
+                        hasPhoneNumber = false;
+
+                        Log.e("", "Caught exception " + e.getMessage() + ", trying get(3) for member location");
+                        result.memberLocation = itemPage.select("td.lineSepar1ator").select("tr").get(3).text();
+                    }
                     result.memberName = itemPage.select("td.lineSepar1ator").select("tr").get(1).text().replace(" offline", "").replace(" online", "");
                     result.memberYesVotes = itemPage.select("td.lineSepar1ator").select("tr").get(2).select("span.positiveColor").text();
                     result.memberNoVotes = itemPage.select("td.lineSepar1ator").select("tr").get(2).select("span.negativeColor").text();
 
-                    String phoneNumberImageURL = itemPage.select("div.phone-number").select("img").get(1).attr("abs:src");
-                    result.memberPhoneNumber = imgLoader.loadImageSync(phoneNumberImageURL);
+                    if (hasPhoneNumber)
+                    {
+                        String phoneNumberImageURL = itemPage.select("div.phone-number").select("img").get(1).attr("abs:src");
+                        result.memberPhoneNumber = imgLoader.loadImageSync(phoneNumberImageURL);
+                    }
+                    else
+                    {
+                        result.memberPhoneNumber = BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                                R.drawable.transparent_square);
+                    }
 
                     List<Bitmap> downloadedImages = new ArrayList<Bitmap>();
                     List<String> imageURLs = new ArrayList<String>();
@@ -241,7 +261,7 @@ public class ItemPageActivity extends Activity {
 
         setContentView(R.layout.activity_item_page);
 
-        OmegaUtil.initSlidingMenu(this);
+//        OmegaUtil.initSlidingMenu(this);
 
 //        setProgressBarIndeterminateVisibility(true);
 
@@ -250,7 +270,8 @@ public class ItemPageActivity extends Activity {
         imgLoader.init(config);
 
         getActionBar().setDisplayShowHomeEnabled(false);
-        getActionBar().setTitle("Pregled predmeta");
+//        getActionBar().setTitle("Pregled predmeta");
+        OmegaUtil.setTitleWithFont(this, "Pregled predmeta", OmegaUtil.TITLE_FONT_NAME, OmegaUtil.dpToPixels(this, 25f));
 
         result = (SearchResult) getIntent().getSerializableExtra(ItemSearchFragment.SEARCH_RESULT_EXTRA_KEY);
 
@@ -313,9 +334,9 @@ public class ItemPageActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 }

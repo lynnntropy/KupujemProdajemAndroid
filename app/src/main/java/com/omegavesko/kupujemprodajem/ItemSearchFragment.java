@@ -38,8 +38,16 @@ public class ItemSearchFragment extends Fragment
 {
     public static final String SEARCH_RESULT_EXTRA_KEY = "com.omegavesko.kupujemprodajem.SEARCH_RESULT";
 
+    private List<SearchResult> allResults;
+    private List<Card> allCards;
+
+    CardArrayAdapter cardAdapter;
+
+    private int currentPage = 1;
+
     class PageDownloaderTask extends AsyncTask<String, Void, List<SearchResult>>
     {
+        private boolean isAborted = false;
 
         private List<WebsiteHandler.Category> categories;
         private List<WebsiteHandler.Location> locations;
@@ -74,17 +82,25 @@ public class ItemSearchFragment extends Fragment
             {
                 tryNumber++;
 
-                if (tryNumber == 2)
+                if (tryNumber == 5)
                 {
                     // fade in the 'trying again' message
-                    getActivity().runOnUiThread(new Runnable()
+                    if (getActivity() != null)
                     {
-                        @Override
-                        public void run()
+                        getActivity().runOnUiThread(new Runnable()
                         {
-                            tryAgainText.animate().alpha(1f).setDuration(800).setListener(null);
-                        }
-                    });
+                            @Override
+                            public void run()
+                            {
+                                tryAgainText.animate().alpha(1f).setDuration(800).setListener(null);
+                            }
+                        });
+                    }
+                    else
+                    {
+                        this.isAborted = true;
+                        break;
+                    }
                 }
 
                 try
@@ -127,61 +143,117 @@ public class ItemSearchFragment extends Fragment
         {
             // we're done - do something with the downloaded page
 
-            getActivity().runOnUiThread(new Runnable()
+            if (!isAborted && getActivity() != null)
             {
-                @Override
-                public void run()
+                if (allResults == null) allResults = new ArrayList<SearchResult>();
+                allResults.addAll(results);
+
+                getActivity().runOnUiThread(new Runnable()
                 {
-
-                    tryAgainText.animate().alpha(0f).setDuration(500).setListener(null);
-
-                    ArrayList<Card> cards = new ArrayList<Card>();
-
-                    Log.i("", "Search results retrieved:");
-                    for (SearchResult res: results)
+                    @Override
+                    public void run()
                     {
-                        if (res.itemName.length() > 0 && res.itemLocation.length() > 0 && !res.itemLocation.trim().isEmpty() && !res.itemLocation.equals("\u00A0") && res.itemLocation != null)
+
+                        tryAgainText.animate().alpha(0f).setDuration(500).setListener(null);
+
+                        ArrayList<Card> cards = new ArrayList<Card>();
+
+                        Log.i("", "Search results retrieved:");
+                        for (SearchResult res : results)
                         {
-                            Log.i("", res.toString());
+                            if (res.itemName.length() > 0 && res.itemLocation.length() > 0 && !res.itemLocation.trim().isEmpty() && !res.itemLocation.equals("\u00A0") && res.itemLocation != null)
+                            {
+                                Log.i("", res.toString());
 
-                            SearchResultCard resultCard = new SearchResultCard(getActivity(), res);
+                                SearchResultCard resultCard = new SearchResultCard(getActivity(), res);
 
-                            resultCard.setOnClickListener(new Card.OnCardClickListener() {
-                                @Override
-                                public void onClick(final Card card, View view) {
+                                resultCard.setOnClickListener(new Card.OnCardClickListener()
+                                {
+                                    @Override
+                                    public void onClick(final Card card, View view)
+                                    {
 
-                                    // delay the onClick action to let the fading animation finish
+                                        // delay the onClick action to let the fading animation finish
 
-                                    final Handler handler = new Handler();
-                                    handler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run()
+                                        final Handler handler = new Handler();
+                                        handler.postDelayed(new Runnable()
                                         {
-                                            Intent intent = new Intent(getActivity(), ItemPageActivity.class);
-                                            SearchResult result = ((SearchResultCard) card).result;
-                                            intent.putExtra(SEARCH_RESULT_EXTRA_KEY, result);
-                                            startActivity(intent);
-                                        }
-                                    }, 800);
-                                }
-                            });
+                                            @Override
+                                            public void run()
+                                            {
+                                                Intent intent = new Intent(getActivity(), ItemPageActivity.class);
+                                                SearchResult result = ((SearchResultCard) card).result;
+                                                intent.putExtra(SEARCH_RESULT_EXTRA_KEY, result);
+                                                startActivity(intent);
+                                            }
+                                        }, 800);
+                                    }
+                                });
 
-                            cards.add(resultCard);
+                                cards.add(resultCard);
+                            }
                         }
+
+                        LoadMoreCard moreResultsCard = new LoadMoreCard(getActivity());
+                        moreResultsCard.setOnClickListener(new Card.OnCardClickListener()
+                        {
+                            @Override
+                            public void onClick(final Card card, View view)
+                            {
+                                Log.i("", "Load more card clicked!");
+
+                                getActivity().runOnUiThread(new Runnable()
+                                {
+                                    @Override
+                                    public void run()
+                                    {
+                                        ((LoadMoreCard) card).promptText.animate()
+                                                .alpha(0f).setDuration(300).setListener(null);
+
+                                        final Handler handler = new Handler();
+                                            handler.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run()
+                                                {
+                                                    ((LoadMoreCard) card).progressBar.animate()
+                                                            .alpha(1f).setDuration(300).setListener(null);
+                                                }
+                                            }, 300);
+                                    }
+                                });
+
+                                currentPage++;
+                                String newURL = calculateQueryUrl();
+                                new PageDownloaderTask().execute(newURL);
+                            }
+                        });
+
+
+                        if (allCards == null)
+                        {
+                            allCards = new ArrayList<Card>();
+                            cardAdapter = new CardArrayAdapter(getActivity(), allCards);
+                            searchCardList.setAdapter(cardAdapter);
+                        }
+
+                        if (allCards.size() > 1)
+                        {
+                            // remove the old 'load more' card
+                            allCards.remove(allCards.size() - 1);
+                        }
+
+                        cards.add(moreResultsCard);
+                        allCards.addAll(cards);
+                        cardAdapter.notifyDataSetChanged();
+
+//                        CardArrayAdapter cardArrayAdapter = new CardArrayAdapter(getActivity(), allCards);
+//                        searchCardList.setAdapter(cardArrayAdapter);
+
+                        searchCardList.animate().alpha(1f).setDuration(800).setListener(null);
+                        downloadBar.animate().alpha(0f).setDuration(800).setListener(null);
                     }
-
-                    LoadMoreCard moreResultsCard = new LoadMoreCard(getActivity());
-                    // TODO: Add an on click listener to the card
-                    cards.add(moreResultsCard);
-
-                    CardArrayAdapter cardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
-                    searchCardList.setAdapter(cardArrayAdapter);
-
-                    searchCardList.animate().alpha(1f).setDuration(800).setListener(null);
-                    downloadBar.animate().alpha(0f).setDuration(800).setListener(null);
-                }
-            });
-
+                });
+            }
         }
     }
 
@@ -229,9 +301,7 @@ public class ItemSearchFragment extends Fragment
 
         Log.w("ItemSearchFragment", "Received new search params: " + searchParams.toString());
 
-        this.queryURL
-                = "http://www.kupujemprodajem.com/search.php?action=list&data%5Bpage%5D=1&data%5Btip_oglasa%5D=" + searchParams.tipOglasaID + "&data%5Bprev_keywords%5D=keywords&data%5Bcategory_id%5D=" + searchParams.categoryID + "&data%5Bgroup_id%5D=&data%5Blocation_id%5D=" + searchParams.locationID + "&data%5Bcondition%5D=" + searchParams.stanjeID + "&data%5Bperiod%5D=&data%5Border%5D=" + searchParams.sortID + "&data%5Bkeywords%5D=" + searchParams.searchTerms + "&data%5Bprice_from%5D=&data%5Bprice_to%5D=&submit%5Bsearch%5D=Tra%C5%BEi";
-
+        calculateQueryUrl();
 
         Log.w("ItemSearchFragment", "Generated query URL: " + queryURL);
 
@@ -253,6 +323,14 @@ public class ItemSearchFragment extends Fragment
         new PageDownloaderTask().execute(this.queryURL);
 
         return rootView;
+    }
+
+    private String calculateQueryUrl()
+    {
+        this.queryURL
+                = "http://www.kupujemprodajem.com/search.php?action=list&data%5Bpage%5D=" + currentPage + "&data%5Btip_oglasa%5D=" + searchParams.tipOglasaID + "&data%5Bprev_keywords%5D=keywords&data%5Bcategory_id%5D=" + searchParams.categoryID + "&data%5Bgroup_id%5D=&data%5Blocation_id%5D=" + searchParams.locationID + "&data%5Bcondition%5D=" + searchParams.stanjeID + "&data%5Bperiod%5D=&data%5Border%5D=" + searchParams.sortID + "&data%5Bkeywords%5D=" + searchParams.searchTerms + "&data%5Bprice_from%5D=&data%5Bprice_to%5D=&submit%5Bsearch%5D=Tra%C5%BEi";
+
+        return queryURL;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -282,5 +360,9 @@ public class ItemSearchFragment extends Fragment
     public interface OnFragmentInteractionListener {
         public void onFragmentInteraction(Uri uri);
     }
+
+    public void loadNextPage()
+    {}
+
 
 }

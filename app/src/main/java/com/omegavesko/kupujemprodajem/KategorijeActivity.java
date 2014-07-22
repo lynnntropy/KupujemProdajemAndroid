@@ -5,6 +5,7 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,8 +17,14 @@ import android.widget.ListView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.omegavesko.kupujemprodajem.R;
 
-public class KategorijeActivity extends Activity  implements KategorijeFragment.OnFragmentInteractionListener, ItemSearchFragment.OnFragmentInteractionListener
+public class KategorijeActivity extends Activity  implements
+        KategorijeFragment.OnFragmentInteractionListener, ItemSearchFragment.OnFragmentInteractionListener, NavigationDrawerFragment.NavigationDrawerCallbacks
 {
+
+    public void onNavigationDrawerItemSelected(int i)
+    {
+        // do nothing :L
+    }
 
     @Override
     public void onFragmentInteraction(Uri uri)
@@ -30,7 +37,7 @@ public class KategorijeActivity extends Activity  implements KategorijeFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kategorije);
 
-        getActionBar().setDisplayShowHomeEnabled(false);
+        OmegaUtil.setTitleWithFont(this, "Kategorije", OmegaUtil.TITLE_FONT_NAME, OmegaUtil.dpToPixels(this, 25f));
 
         // set up SlidingMenu
 //        SlidingMenu navDrawer = new SlidingMenu(this);
@@ -49,7 +56,14 @@ public class KategorijeActivity extends Activity  implements KategorijeFragment.
 //                new DrawerListAdapter(this, navDrawer)
 //        );
 
-        OmegaUtil.initSlidingMenu(this);
+//        OmegaUtil.initSlidingMenu(this);
+
+        OmegaUtil.initNavigationDrawer(
+                this,
+                (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer),
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout)
+        );
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
@@ -72,9 +86,9 @@ public class KategorijeActivity extends Activity  implements KategorijeFragment.
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 }

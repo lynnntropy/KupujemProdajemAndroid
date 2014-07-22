@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
@@ -74,21 +75,16 @@ public class HomeActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // TODO: Properly set up the sliding menu!
+        // set the action bar title, with custom font and size (in dp)
+        OmegaUtil.setTitleWithFont(this, "Pretraga", OmegaUtil.TITLE_FONT_NAME, OmegaUtil.dpToPixels(this, 25f));
 
-        OmegaUtil.initSlidingMenu(this);
-
-        new ActionBarDrawerToggle
-                (this, null, R.drawable.ic_drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_open);
-
-        getActionBar().setDisplayShowHomeEnabled(false);
-
-        mTitle = getTitle();
-//
-//        // Set up the drawer.
-//        mNavigationDrawerFragment.setUp(
-//                R.id.navigation_drawer,
-//                (DrawerLayout) findViewById(R.id.drawer_layout));
+        // initialize the navigation drawer
+        OmegaUtil.initNavigationDrawer(
+                this,
+                (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer),
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout)
+        );
     }
 
     @Override
@@ -107,7 +103,7 @@ public class HomeActivity extends Activity
                     public void run() {
                         if (position == 0)
                         {
-                            mTitle = "Kupujem Prodajem";
+                            mTitle = "Pretraga";
 
                             fragmentManager.beginTransaction()
                                     .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
@@ -133,7 +129,7 @@ public class HomeActivity extends Activity
         switch (number) {
             case 1:
 //                mTitle = getString(R.string.title_section1);
-                mTitle = "Kupujem Prodajem";
+                mTitle = "Pretraga";
                 break;
             case 2:
                 mTitle = getString(R.string.title_section2);
@@ -171,9 +167,9 @@ public class HomeActivity extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
 
         return super.onOptionsItemSelected(item);
@@ -325,10 +321,15 @@ public class HomeActivity extends Activity
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-            getActivity().getActionBar().setTitle("Kupujem Prodajem");
+//            getActivity().getActionBar().setTitle("Pretraga");
+
+            OmegaUtil.setTitleWithFont(
+
+                    getActivity(), "Pretraga", OmegaUtil.TITLE_FONT_NAME, OmegaUtil.dpToPixels(getActivity(), 25f));
+
 
             // TODO: Debug, shouldn't get called every time
-            showTutorial();
+//            showTutorial();
 
             SharedPreferences settings = getActivity().getSharedPreferences("preferences", 0);
             boolean firstLaunch = settings.getBoolean("firstLaunch", true);
@@ -384,7 +385,7 @@ public class HomeActivity extends Activity
                         pretragaEditText.clearFocus();
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(pretragaEditText.getWindowToken(), 0);
-                        
+
                         // run the search
                         PerformSearch();
                     }
@@ -483,6 +484,22 @@ public class HomeActivity extends Activity
                     new PageDownloaderTask().execute();
                 }
             });
+
+            downloadDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface)
+                {
+                    final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run()
+                            {
+                                showTutorial();
+                            }
+                        }, 700);
+                }
+            });
             
             downloadDialog.show();
         }
@@ -521,7 +538,9 @@ public class HomeActivity extends Activity
                 @Override
                 public void run()
                 {
-                    getActivity().getActionBar().setTitle("Rezultati pretrage");
+//                    getActivity().getActionBar().setTitle("Rezultati pretrage");
+                    OmegaUtil.setTitleWithFont(
+                            getActivity(), "Rezultati pretrage", OmegaUtil.TITLE_FONT_NAME, OmegaUtil.dpToPixels(getActivity(), 25f));
 
                     SearchParams params = new SearchParams
                             (((WebsiteHandler.GenericID) tipOglasaSpinner.getSelectedItem()).idString,
