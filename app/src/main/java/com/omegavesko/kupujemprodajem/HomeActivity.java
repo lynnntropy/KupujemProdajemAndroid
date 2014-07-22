@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.Typeface;
@@ -15,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -27,7 +29,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -72,21 +76,13 @@ public class HomeActivity extends Activity
 
         // TODO: Properly set up the sliding menu!
 
-        SlidingMenu navDrawer = new SlidingMenu(this);
-        navDrawer.setMode(SlidingMenu.LEFT);
-        navDrawer.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        navDrawer.setShadowWidthRes(R.dimen.shadow_width);
-//        navDrawer.setShadowDrawable(R.drawable.shadow);
-        navDrawer.setBehindWidth(200);
-        navDrawer.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        navDrawer.setFadeDegree(0.35f);
-        navDrawer.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
-        navDrawer.setMenu(R.layout.navdrawer_layout);
+        OmegaUtil.initSlidingMenu(this);
+
+        new ActionBarDrawerToggle
+                (this, null, R.drawable.ic_drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_open);
 
         getActionBar().setDisplayShowHomeEnabled(false);
 
-//        mNavigationDrawerFragment = (NavigationDrawerFragment)
-//                getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 //
 //        // Set up the drawer.
@@ -388,7 +384,7 @@ public class HomeActivity extends Activity
                         pretragaEditText.clearFocus();
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(pretragaEditText.getWindowToken(), 0);
-
+                        
                         // run the search
                         PerformSearch();
                     }
@@ -556,7 +552,6 @@ public class HomeActivity extends Activity
                     .setTarget(new PointTarget(0, height / 2))
                     .setContentTitle("Fioka na izvlačenje")
                     .setContentText("Povucite prstom na desno da biste otvorili meni sa dodatnim opcijama.")
-                    .hideOnTouchOutside()
                     .setStyle(R.style.CustomShowcaseTheme)
                     .build();
         }

@@ -9,8 +9,8 @@
 
     <dimen name="card_base_empty_height">20dp</dimen>
 
-    <dimen name="shadow_width">5dp</dimen>
+    <dimen name="shadow_width">10dp</dimen>
     <dimen name="slidingmenu_offset">75dp</dimen>
 
-    <dimen name="drawer_width">100dp</dimen>
+    <!--<dimen name="drawer_width">100dp</dimen>-->
 </resources>

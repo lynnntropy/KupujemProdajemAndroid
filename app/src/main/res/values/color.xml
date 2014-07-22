@@ -10,4 +10,6 @@
 
     <color name="card_text_dark">#8d8d8d</color>
     <color name="card_text_light">#DEDEDE</color>
+
+    <drawable name="selected_drawer_item">@color/darkest_red</drawable>
 </resources>

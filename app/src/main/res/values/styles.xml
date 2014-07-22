@@ -18,12 +18,23 @@
 
     </style>
 
-    <style name="CustomShowcaseTheme" parent="ShowcaseView.Light">
+    <style name="CustomShowcaseTheme" parent="ShowcaseView">
         <item name="sv_backgroundColor">#CC000000</item>
         <item name="sv_showcaseColor">@color/main_red</item>
         <item name="sv_buttonText">Nastavi</item>
         <item name="sv_tintButtonColor">false</item>
-        <item name="android:textColor">#FF0000</item>
+
+        <!--<item name="sv_titleTextAppearance">@style/CustomTitle</item>-->
+        <!--<item name="sv_detailTextAppearance">@style/CustomDetailText</item>-->
     </style>
+
+    <!--<style name="CustomTitle" parent="TextAppearance.ShowcaseView.Detail.Light">-->
+        <!--<item name="android:textColor">#FFFFFF</item>-->
+    <!--</style>-->
+
+    <!--<style name="CustomDetailText" parent="TextAppearance.ShowcaseView.Title.Light">-->
+        <!--<item name="android:textColor">#FF0000</item>-->
+    <!--</style>-->
+
 
 </resources>

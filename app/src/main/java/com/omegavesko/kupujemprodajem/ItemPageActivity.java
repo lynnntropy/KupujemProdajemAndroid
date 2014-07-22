@@ -241,6 +241,8 @@ public class ItemPageActivity extends Activity {
 
         setContentView(R.layout.activity_item_page);
 
+        OmegaUtil.initSlidingMenu(this);
+
 //        setProgressBarIndeterminateVisibility(true);
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext()).build();

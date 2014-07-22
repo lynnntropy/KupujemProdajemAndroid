@@ -10,8 +10,7 @@
         <activity
             android:name=".HomeActivity"
             android:label="@string/app_name"
-
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,6 +30,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.omegavesko.kupujemprodajem.ItemPageActivity" />
+        </activity>
+        <activity
+            android:name=".KategorijeActivity"
+            android:label="@string/title_activity_kategorije"
+            android:parentActivityName=".HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.omegavesko.kupujemprodajem.HomeActivity" />
         </activity>
     </application>
 
