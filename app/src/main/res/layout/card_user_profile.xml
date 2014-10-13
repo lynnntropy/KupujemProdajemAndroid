@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <Space android:id="@+id/screenCenter"
+           android:layout_width="0dp"
+           android:layout_height="0dp"
+           android:layout_centerHorizontal="true"
+           android:visibility="invisible"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Pera Perić"
+        android:gravity="center_horizontal"
+        android:textSize="40sp"
+        android:paddingTop="10dp"
+        android:id="@+id/userName"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="pera.peric@gmail.com"
+        android:id="@+id/userEmail"
+        android:layout_below="@+id/userName"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:textSize="15sp"
+        android:paddingBottom="6dp"
+        android:layout_marginTop="-3dp"/>
+
+    <TextView
+        android:layout_width="95dp"
+        android:layout_height="wrap_content"
+        android:text="\u25BC200"
+        android:id="@+id/userNegativeVotes"
+        android:textSize="35sp"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/userEmail"
+        android:layout_alignRight="@+id/screenCenter"
+        android:layout_alignEnd="@+id/screenCenter"
+        android:paddingBottom="10dp"/>
+
+    <TextView
+        android:layout_width="95dp"
+        android:layout_height="wrap_content"
+        android:text="\u25B2365 "
+        android:id="@+id/userPositiveVotes"
+        android:textSize="35sp"
+        android:gravity="center_horizontal"
+        android:layout_alignTop="@+id/userNegativeVotes"
+        android:layout_alignLeft="@+id/screenCenter"
+        android:layout_alignStart="@+id/screenCenter"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Broj telefona"
+        android:id="@+id/phoneNumberLabel"
+        android:layout_below="@+id/userNegativeVotes"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:textSize="23sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="06348795123"
+        android:id="@+id/phoneNumber"
+        android:layout_below="@+id/phoneNumberLabel"
+        android:layout_alignLeft="@+id/phoneNumberLabel"
+        android:layout_alignStart="@+id/phoneNumberLabel"
+        android:textSize="30sp"
+        android:paddingBottom="15dp"/>
+
+</RelativeLayout>

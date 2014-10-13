@@ -46,6 +46,9 @@ public class DrawerListAdapter extends ArrayAdapter<String> {
         activitiesToList = new ArrayList<ActivityToLaunch>();
         activitiesToList.add(new ActivityToLaunch("Pretraga", HomeActivity.class));
         activitiesToList.add(new ActivityToLaunch("Kategorije", KategorijeActivity.class));
+        activitiesToList.add(new ActivityToLaunch("Korisnički Profil", UserProfileActivity.class));
+        activitiesToList.add(new ActivityToLaunch("Login", LoginActivity.class));
+//        activitiesToList.add(new ActivityToLaunch("   Poruke", MessagesActivity.class));
 
 //        this.drawerInstance = drawerInstance;
 
@@ -63,7 +66,20 @@ public class DrawerListAdapter extends ArrayAdapter<String> {
     {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.drawer_row, parent, false);
+
+        View rowView;
+
+        if (activitiesToList.get(position).name.equals("Login"))
+        {
+            // Login button, must be indented
+            rowView = inflater.inflate(R.layout.drawer_row_indented, parent, false);
+            TextView indentedTextView = (TextView) rowView.findViewById(R.id.indentedIcon);
+            indentedTextView.setTypeface(robotoLight);
+        }
+        else
+        {
+            rowView = inflater.inflate(R.layout.drawer_row, parent, false);
+        }
 
         TextView textView = (TextView) rowView.findViewById(R.id.activityName);
         textView.setText(activitiesToList.get(position).name);

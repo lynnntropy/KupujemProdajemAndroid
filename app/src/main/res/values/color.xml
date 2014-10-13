@@ -12,4 +12,6 @@
     <color name="card_text_light">#DEDEDE</color>
 
     <drawable name="selected_drawer_item">@color/darkest_red</drawable>
+
+    <color name="main_green">#259b24</color>
 </resources>

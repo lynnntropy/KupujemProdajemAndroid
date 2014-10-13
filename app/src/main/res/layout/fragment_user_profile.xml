@@ -1,0 +1,77 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    android:paddingBottom="0dp"
+    tools:context="com.omegavesko.kupujemprodajem.UserProfileActivity$PlaceholderFragment"
+    android:padding="0dp">
+
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/downloadBar"
+
+        android:indeterminate="true"
+
+        app:spb_sections_count="4"
+        app:spb_color="@color/lighter_red"
+        app:spb_speed="2.0"
+        app:spb_stroke_width="7dp"
+        app:spb_stroke_separator_length="4dp"
+        app:spb_reversed="false"
+        app:spb_mirror_mode="false"
+        app:spb_progressiveStart_activated="false"
+        app:spb_progressiveStart_speed="1.5"
+        app:spb_progressiveStop_speed="3.4"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:visibility="visible"
+        android:layout_marginTop="-5dp"/>
+
+    <it.gmariotti.cardslib.library.view.CardView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/userProfileCard"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Prekinuta veza sa Internetom, ili niste uneli pravilne podatke. Pokušajte ponovo."
+        android:id="@+id/errorMessage"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:textSize="20sp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp" />
+
+    <info.hoang8f.widget.FButton
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:text="Odjavi se"
+
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="3dp"
+        fbutton:cornerRadius="3dp"
+
+        fbutton:buttonColor="@color/main_red"
+        android:textColor="#FFFFFF"
+        android:id="@+id/logoutButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp" />
+
+</RelativeLayout>
